@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
-// import 'package:permission_handler/permission_handler.dart';
 import 'package:snapbook/helper/notifications_helper.dart';
 import 'package:snapbook/pages/calendar.dart';
 import 'package:snapbook/pages/gallery.dart';
@@ -21,8 +20,6 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // methods---------------------------------------------------------------------------------------------
-
   void _checkAndRequestPermissions() async {
     if (await Permission.photos.isGranted &&
         await Permission.notification.isGranted) return;
@@ -33,7 +30,6 @@ class _MyAppState extends State<MyApp> {
     setState(() {});
   }
 
-  // pages
   final PageController _pageController = PageController();
   int _selectedIndex = 0;
 
@@ -65,7 +61,6 @@ class _MyAppState extends State<MyApp> {
         ),
       ),
 
-      // main
       home: Scaffold(
         bottomNavigationBar: Theme(
           data: ThemeData(
@@ -74,10 +69,6 @@ class _MyAppState extends State<MyApp> {
           ),
           child: Container(
             decoration: const BoxDecoration(
-              // borderRadius: BorderRadius.only(
-              //   topRight: Radius.circular(20),
-              //   topLeft: Radius.circular(20),
-              // ),
               boxShadow: [
                 BoxShadow(
                   color: Colors.black26,
@@ -87,10 +78,6 @@ class _MyAppState extends State<MyApp> {
               ],
             ),
             child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                  // topLeft: Radius.circular(20.0),
-                  // topRight: Radius.circular(20.0),
-                  ),
               child: SizedBox(
                 height: 80.0,
                 child: BottomNavigationBar(

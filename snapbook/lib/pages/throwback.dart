@@ -176,14 +176,6 @@ class _ThrowbackState extends State<Throwback> {
     );
   }
 
-  // helper methods
-  String _twoDigits(int n) {
-    if (n >= 10) {
-      return "$n";
-    }
-    return "0$n";
-  }
-
   String getMonthYear(String date) {
     DateTime dateTime = DateTime.parse(date);
     return '${dateTime.month}/${dateTime.year}';

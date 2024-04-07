@@ -77,41 +77,6 @@ class DatabaseHelper {
       );
     }
   }
-/*
-  Future<void> importDatabase(String importPath) async {
-    try {
-      await initializeDatabase();
-
-      if (!File(importPath).existsSync()) {
-        return;
-      }
-
-      // await _database.close();
-      // await File(importPath).copy(_database.path);
-      // await initializeDatabase();
-
-      await initializeDatabase();
-      File file = await File(importPath).copy(_database.path);
-
-      _database = await openDatabase(_database.path);
-
-      await _database.close();
-      await initializeDatabase();
-
-      NotificationsHelper notificationsHelper = NotificationsHelper();
-      notificationsHelper.showNotification(
-        "Database Imported!",
-        "Successfully imported the database.",
-      );
-    } catch (e) {
-      NotificationsHelper notificationsHelper = NotificationsHelper();
-      notificationsHelper.showNotification(
-        "Database Import Failed",
-        "Failed to import the database: $e",
-      );
-    }
-  }
-  */
 
   Future<void> importDatabase(String importPath) async {
     Database sourceDb = await openDatabase(importPath, readOnly: false);
@@ -155,49 +120,17 @@ class DatabaseHelper {
 
     await sourceDb.close();
     await initializeDatabase();
-/*
-    try {
-      // Iterate over tables
-      List<String> tables = await sourceDb
-          .query('sqlite_master', where: 'type = ?', whereArgs: ['table']).then(
-              (result) =>
-                  List<String>.from(result.map((e) => e['name'] as String)));
-
-      for (String table in tables) {
-        // Retrieve data from the source table
-        List<Map<String, dynamic>> data = await sourceDb.query(table);
-
-        // Insert the data into the corresponding table in the destination database
-        await destinationDb.transaction((txn) async {
-          for (Map<String, dynamic> row in data) {
-            // Check if a record with the same primary key already exists in the destination database
-            List<Map<String, dynamic>> existingRecords = await txn
-                .query(table, where: 'path = ?', whereArgs: [row['path']]);
-
-            if (existingRecords.isEmpty) {
-              // Insert the record only if it doesn't already exist
-              await txn.insert(table, row);
-            } else {
-              // Handle the case where the record already exists (optional)
-              print('Skipped insertion of duplicate record in table $table.');
-            }
-          }
-        });
-      }
-*/
   }
 
   // Function to generate a new unique id
   Future<int> _generateUniqueId() async {
-    // You can implement your logic to generate a new unique id here
-    // For example, you can query the database for the maximum id and add 1
     List<Map<String, Object?>> result =
         await _database.rawQuery('SELECT MAX(id) as maxId FROM images');
     int maxId = result[0]['maxId'] as int? ?? 0;
     return maxId + 1;
   }
 
-// calendar view
+  // calendar view
   Future<List<DateTime>> getHighlightedDates() async {
     final List<Map<String, dynamic>> result = await _database.query('images');
     return result.map((map) => DateTime.parse(map['date'])).toList();
@@ -209,11 +142,6 @@ class DatabaseHelper {
     int day = dateTime.day;
     int month = dateTime.month;
     int year = dateTime.year;
-
-    // List<Map<String, dynamic>> result = await _database.rawQuery(
-    //   'SELECT * caption_column FROM images WHERE strftime(\'%Y-%m-%d %H:%M:%S\', date) = ?',
-    //   [formattedDateTime],
-    // );
 
     List<Map<String, dynamic>> result = await _database.rawQuery(
       "SELECT path, caption FROM images WHERE date LIKE '%$year%$month%$day%'",
